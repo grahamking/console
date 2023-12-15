@@ -1,3 +1,11 @@
+main branch matches upstream as of 15th DEC 2023 plus these three PRs:
+
+- [Don't save poll_ops if no-one is receiving them](https://github.com/tokio-rs/console/pull/501)
+- [Reduce retention period to fit in max message size](https://github.com/tokio-rs/console/pull/503)
+- [Reduce default retention to six seconds](https://github.com/tokio-rs/console/pull/504)
+
+---
+
 # tokio-console
 
 [![API Documentation(`main`)](https://img.shields.io/netlify/0e5ffd50-e1fa-416e-b147-a04dab28cfb1?label=docs%20%28main%29)][main-docs]
@@ -186,43 +194,43 @@ Commands:
 Arguments:
   [TARGET_ADDR]
           The address of a console-enabled process to connect to.
-          
+
           This may be an IP address and port, or a DNS name.
-          
+
           On Unix platforms, this may also be a URI with the `file`
           scheme that specifies the path to a Unix domain socket, as in
           `file://localhost/path/to/socket`.
-          
+
           [default: http://127.0.0.1:6669]
 
 Options:
       --log <LOG_FILTER>
           Log level filter for the console's internal diagnostics.
-          
+
           Logs are written to a new file at the path given by the
           `--log-dir` argument (or its default value), or to the system
           journal if `systemd-journald` support is enabled.
-          
+
           If this is set to 'off' or is not set, no logs will be
           written.
-          
+
           [default: off]
-          
+
           [env: RUST_LOG=]
 
       --log-dir <LOG_DIRECTORY>
           Path to a directory to write the console's internal logs to.
-          
+
           [default: /tmp/tokio-console/logs]
 
       --lang <LANG>
           Overrides the terminal's default language
-          
+
           [env: LANG=en_US.UTF-8]
 
       --ascii-only <ASCII_ONLY>
           Explicitly use only ASCII characters
-          
+
           [possible values: true, false]
 
       --no-colors
@@ -230,59 +238,59 @@ Options:
 
       --colorterm <truecolor>
           Overrides the value of the `COLORTERM` environment variable.
-          
+
           If this is set to `24bit` or `truecolor`, 24-bit RGB color
           support will be enabled.
-          
+
           [env: COLORTERM=truecolor]
           [possible values: 24bit, truecolor]
 
       --palette <PALETTE>
           Explicitly set which color palette to use
-          
+
           [possible values: 8, 16, 256, all, off]
 
       --no-duration-colors <COLOR_DURATIONS>
           Disable color-coding for duration units
-          
+
           [possible values: true, false]
 
       --no-terminated-colors <COLOR_TERMINATED>
           Disable color-coding for terminated tasks
-          
+
           [possible values: true, false]
 
       --retain-for <RETAIN_FOR>
           How long to continue displaying completed tasks and dropped
           resources after they have been closed.
-          
+
           This accepts either a duration, parsed as a combination of
           time spans (such as `5days 2min 2s`), or `none` to disable
           removing completed tasks and dropped resources.
-          
+
           Each time span is an integer number followed by a suffix.
           Supported suffixes are:
-          
+
           * `nsec`, `ns` -- nanoseconds
-          
+
           * `usec`, `us` -- microseconds
-          
+
           * `msec`, `ms` -- milliseconds
-          
+
           * `seconds`, `second`, `sec`, `s`
-          
+
           * `minutes`, `minute`, `min`, `m`
-          
+
           * `hours`, `hour`, `hr`, `h`
-          
+
           * `days`, `day`, `d`
-          
+
           * `weeks`, `week`, `w`
-          
+
           * `months`, `month`, `M` -- defined as 30.44 days
-          
+
           * `years`, `year`, `y` -- defined as 365.25 days
-          
+
           [default: 6s]
 
   -h, --help
