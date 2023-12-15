@@ -277,6 +277,9 @@ impl Aggregator {
             .drop_closed(&mut self.resource_stats, now, self.retention, has_watchers);
         self.async_ops
             .drop_closed(&mut self.async_op_stats, now, self.retention, has_watchers);
+        if !has_watchers && !self.poll_ops.is_empty() {
+            self.poll_ops.clear();
+        }
     }
 
     /// Add the task subscription to the watchers after sending the first update
@@ -337,14 +340,10 @@ impl Aggregator {
     }
 
     fn resource_update(&mut self, include: Include) -> proto::resources::ResourceUpdate {
-        let new_poll_ops = match include {
-            Include::All => self.poll_ops.clone(),
-            Include::UpdatedOnly => std::mem::take(&mut self.poll_ops),
-        };
         proto::resources::ResourceUpdate {
             new_resources: self.resources.as_proto_list(include, &self.base_time),
             stats_update: self.resource_stats.as_proto(include, &self.base_time),
-            new_poll_ops,
+            new_poll_ops: std::mem::take(&mut self.poll_ops),
             dropped_events: self.shared.dropped_resources.swap(0, AcqRel) as u64,
         }
     }
@@ -504,6 +503,9 @@ impl Aggregator {
                 task_id,
                 is_ready,
             } => {
+                if self.watchers.is_empty() {
+                    return;
+                }
                 let poll_op = proto::resources::PollOp {
                     metadata: Some(metadata.into()),
                     resource_id: Some(resource_id.into()),
